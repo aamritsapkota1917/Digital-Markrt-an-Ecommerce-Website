@@ -8,14 +8,13 @@ from rest_framework import status
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.models import User
 import requests
-<<<<<<< HEAD
+
 import pickle
-=======
+
 from rest_framework import viewsets
 from rest_framework.filters import OrderingFilter, SearchFilter
-from django_filters.rest_framework import DjangoFilterBackend
 
->>>>>>> 8f970115364797f34fc4d9ac477f0e7293e5980f
+
 
 @api_view(['GET'])
 def getProducts(request):
@@ -24,11 +23,10 @@ def getProducts(request):
         query = ''
     products = Product.objects.filter(name__icontains=query)
     page = request.query_params.get('page')
-<<<<<<< HEAD
-    paginator = Paginator(products,16)
-=======
-    paginator = Paginator(products, 8)
->>>>>>> 8f970115364797f34fc4d9ac477f0e7293e5980f
+    paginator = Paginator(products,1600)
+
+    # paginator = Paginator(products, 8)
+
 
     try:
         products = paginator.page(page)
@@ -172,17 +170,17 @@ def createProductReview(request, pk):
         product.save()
 
         return Response('Review Added')
-<<<<<<< HEAD
     
-similarity = pickle.load(open('similarity.pkl', 'rb'))
+similarity = pickle.load(open('similarity9.pkl', 'rb'))
 
 
 @api_view(['GET'])
 def recommend(request,pk):
     product = Product.objects.get(_id=pk)
-    distances = similarity[product._id-1]
+    distances = similarity[product._id-3]
     product_list = sorted(
-        list(enumerate(distances)), reverse=True, key=lambda x: x[1])[1:9]
+        list(enumerate(distances)), reverse=True, key=lambda x: x[1])[1:5]
+    print(product_list)
     productList = Product.objects.none()
     for i in product_list:
         products = Product.objects.filter(_id=(i[0]+1))
@@ -192,15 +190,7 @@ def recommend(request,pk):
 
     serializer = ProductSerializer(productList, many = True)
     return Response(serializer.data)
-=======
 
 
-class API(viewsets.ModelViewSet):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-    filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
-    # filterset_fields = ['category']
 
-    def get_queryset(self):
-        return Product.objects.order_by('?').all()[:10]
->>>>>>> 8f970115364797f34fc4d9ac477f0e7293e5980f
+
